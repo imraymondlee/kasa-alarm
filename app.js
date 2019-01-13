@@ -9,10 +9,11 @@ let startAlarmTime;
 let nextIncrementTime;
 let currentBrightness;
 
-//temporary values
+//temporary values are set for testing
 const brightnessIncrement = 10;
-const timeIncrement = 5;
-const startingBrightness = 10;
+const timeIncrement = 10;
+const startingBrightness = 0;
+const bulbIP = '192.168.1.140';
 
 let app = express();
 
@@ -27,13 +28,14 @@ app.get('/', (req, res) => {
 // Start time will start 30 minutes prior to wake up time.
 // Every 3 minutes, will increase by 10 for 30 minutes.
 app.post('/set-alarm', (req, res) => {
-	//test
+	//Take in string in format of 1/9/2019, 8:46:30 PM
 	let body = _.pick(req.body, ['endAlarmTime']);
 
-	endAlarmTime = body.endAlarmTime;
-	startAlarmTime = endAlarmTime - 30;
+	endAlarmTime = new Date(body.endAlarmTime);
+	startAlarmTime = new Date(endAlarmTime - 30*1000).toLocaleString(); // subtract 30 s
+	//startAlarmTime = new Date(currentDate - 30*60*1000); // subtract 30 minutes
 	nextIncrementTime = startAlarmTime;
-	currentBrightness = 10;
+	currentBrightness = startingBrightness;
 
 	updateTime();
 	res.send('Alarm Set!');
@@ -47,40 +49,56 @@ app.post('/bulb-off', (req, res) => {
 
 const client = new Client();
 
-bulb = client.getBulb({host: '192.168.1.137'});
+bulb = client.getBulb({host: bulbIP});
 
 const updateTime = () => {
 	let date = new Date();
-	console.log(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds());
+
+	console.log('CURRENT TIME: ' + date.toLocaleString());
 	let timer = setTimeout(updateTime, 1000);
 
-
-	console.log('currentBrightness: ' + currentBrightness);
 	console.log('nextIncrementTime: ' + nextIncrementTime);
+	console.log('currentBrightness: ' + currentBrightness);
+	console.log('-----------------------------------------------');
 
-	if(date.getSeconds() == startAlarmTime){
+	 if(date.toLocaleString() == startAlarmTime){
 		bulb.lighting.setLightState({on_off: true, brightness: currentBrightness}).then((state) => {
 			console.log(state);
 		});
-		nextIncrementTime = nextIncrementTime + timeIncrement;
+		nextIncrementTime = new Date(nextIncrementTime);
+		//10s for testing
+		nextIncrementTime.setSeconds(nextIncrementTime.getSeconds() + timeIncrement);
+		// nextIncrementTime.setMinutes(nextIncrementTime.getMinutes() + timeIncrement);
+		nextIncrementTime = nextIncrementTime.toLocaleString();
+
 		currentBrightness = currentBrightness + brightnessIncrement;
+		console.log('***********Lights On****************');
 	}
-	if(date.getSeconds() == nextIncrementTime){
+
+
+	if(date.toLocaleString() == nextIncrementTime){
 		bulb.lighting.setLightState({brightness: currentBrightness}).then((state) => {
 			console.log('Current Brightness: ' + currentBrightness);
 		});
-		nextIncrementTime = nextIncrementTime + timeIncrement;
+		nextIncrementTime = new Date(nextIncrementTime);
+		//10s for testing		
+		nextIncrementTime.setSeconds(nextIncrementTime.getSeconds() + timeIncrement);
+		// nextIncrementTime.setMinutes(nextIncrementTime.getMinutes() + timeIncrement);		
+		nextIncrementTime = nextIncrementTime.toLocaleString();
+
 		currentBrightness = currentBrightness + brightnessIncrement;
+		console.log('***********Brightness Increased****************');
 	}
 
-	if(date.getSeconds() == endAlarmTime){
+	if(date.toLocaleString() == endAlarmTime.toLocaleString()){
 		bulb.lighting.setLightState({on_off: false}).then((state) => {
 			console.log(state);
 		});
-		nextIncrementTime = startAlarmTime;
 		currentBrightness = startingBrightness;
+		console.log('***********Alarm Stopped****************');
 		clearTimeout(timer);
 	}
+
 }
 
 const bulbOff = () => {
