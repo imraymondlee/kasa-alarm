@@ -3,6 +3,7 @@ const { Client } = require('tplink-smarthome-api');
 const _ = require('lodash');
 const bodyParser = require('body-parser')
 
+let timer;
 
 let endAlarmTime;
 let startAlarmTime;
@@ -19,8 +20,24 @@ let app = express();
 
 app.use(bodyParser.json());
 
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 app.get('/', (req, res) => {
 	res.send('Hello World!');
+});
+
+app.get('/show-alarms', (req, res) => {
+	console.log(endAlarmTime);
+	if(endAlarmTime != undefined){
+		res.send(endAlarmTime.toLocaleString());
+	}else{
+		res.send('No alarms have been set.');
+	}
 });
 
 
@@ -42,9 +59,16 @@ app.post('/set-alarm', (req, res) => {
 });
 
 
+app.post('/delete-alarm', (req, res) => {
+	console.log('*****Alarm deleted*****')
+	endAlarmTime = 'No alarms have been set.'
+	clearTimeout(timer);
+	res.send('Alarm deleted!');
+});
+
 app.post('/bulb-off', (req, res) => {
 	bulbOff();
-	res.send('Bulb Off!');
+	res.status(200).send('Bulb Off!');
 });
 
 const client = new Client();
@@ -55,7 +79,7 @@ const updateTime = () => {
 	let date = new Date();
 
 	console.log('CURRENT TIME: ' + date.toLocaleString());
-	let timer = setTimeout(updateTime, 1000);
+	timer = setTimeout(updateTime, 1000);
 
 	console.log('nextIncrementTime: ' + nextIncrementTime);
 	console.log('currentBrightness: ' + currentBrightness);
@@ -107,6 +131,6 @@ const bulbOff = () => {
 	});
 }
 
-app.listen(3000, () => {
-	console.log('Server started on port 3000.')
+app.listen(8000, () => {
+	console.log('Server started on port 8000.')
 })
