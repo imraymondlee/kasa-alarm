@@ -27,7 +27,13 @@ class SetAlarm extends Component {
     return (
       <form onSubmit={this.onSubmit}>
         <input id="date-time" type="datetime-local" onChange={this.onChange} value={this.dateTime} />
-        <input type="submit" value="Set Alarm" />
+
+        {this.props.currentAlarmTime != 'No alarms have been set.' ? (
+          <input type="submit" value="Set Alarm" disabled/>
+        ) : (
+          <input type="submit" value="Set Alarm" />
+        )}
+
       </form>
     );
   }

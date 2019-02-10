@@ -14,7 +14,7 @@ class App extends Component {
   }
 
   componentDidMount () {
-    axios.get('http://localhost:8000/show-alarms')
+    axios.get('/show-alarms')
       .then((response) => {
         this.setState({
           currentAlarmTime: response.data
@@ -31,7 +31,7 @@ class App extends Component {
 
   submitAlarm = (formattedDate) => {
     console.log(formattedDate);
-    axios.post('http://localhost:8000/set-alarm', {
+    axios.post('/set-alarm', {
       endAlarmTime: formattedDate
     }).then((response) => {
       console.log(response);
@@ -45,7 +45,7 @@ class App extends Component {
   }
 
   deleteAlarm = (deleteAlarmTime) => {
-    axios.post('http://localhost:8000/delete-alarm', {
+    axios.post('/delete-alarm', {
       deleteAlarm: deleteAlarmTime
     }).then((response) => {
       console.log(response);
@@ -65,7 +65,7 @@ class App extends Component {
       <div className="App">
         {status}
         <CurrentTime/>
-        <SetAlarm submitAlarm={this.submitAlarm}/>
+        <SetAlarm submitAlarm={this.submitAlarm} currentAlarmTime={this.state.currentAlarmTime}/>
         <CurrentAlarms currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm}/>
       </div>
     );
