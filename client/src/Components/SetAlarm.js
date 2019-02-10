@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import moment from 'moment';
 
 class SetAlarm extends Component {
@@ -19,26 +18,15 @@ class SetAlarm extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    const data = this.state;
-    // console.log(data.dateTime);
-    let date = data.dateTime
+    let date = this.state.dateTime
     let formattedDate = moment(date, moment.HTML5_FMT.DATETIME_LOCAL).format("M/D/YYYY, h:mm:ss A");
-    console.log(formattedDate);
-
-    axios.post('http://localhost:8000/set-alarm', {
-      endAlarmTime: formattedDate
-    }).then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.log(error);
-    });
+    this.props.submitAlarm(formattedDate);
   }
 
   render() {
     return (
       <form onSubmit={this.onSubmit}>
         <input id="date-time" type="datetime-local" onChange={this.onChange} value={this.dateTime} />
-
         <input type="submit" value="Set Alarm" />
       </form>
     );
