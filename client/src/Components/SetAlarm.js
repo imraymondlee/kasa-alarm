@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 
 class SetAlarm extends Component {
 
@@ -26,12 +29,24 @@ class SetAlarm extends Component {
   render() {
     return (
       <form onSubmit={this.onSubmit}>
-        <input id="date-time" type="datetime-local" onChange={this.onChange} value={this.dateTime} />
 
+        <TextField
+          id="date-time"
+          type="datetime-local"
+          fullWidth={true}
+          margin="normal"
+          onChange={this.onChange} 
+          value={this.dateTime}
+        />
+        <br />
         {this.props.currentAlarmTime != 'No alarms have been set.' ? (
-          <input type="submit" value="Set Alarm" disabled/>
+          <Button type="submit" variant="contained" color="primary" fullWidth={true} disabled>
+            Set Alarm
+          </Button>
         ) : (
-          <input type="submit" value="Set Alarm" />
+          <Button type="submit" variant="contained" fullWidth={true} color="primary">
+            Set Alarm
+          </Button>
         )}
 
       </form>

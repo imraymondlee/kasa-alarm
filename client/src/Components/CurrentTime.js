@@ -28,8 +28,7 @@ class CurrentTime extends Component {
   render() {
     return (
       <div>
-        <h1>Current Time:</h1>
-        <p>{this.state.time}</p>
+        <h1>{this.state.time}</h1>
       </div>
     );
   }

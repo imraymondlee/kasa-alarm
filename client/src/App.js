@@ -5,6 +5,43 @@ import SetAlarm from './Components/SetAlarm';
 import CurrentAlarms from './Components/CurrentAlarms';
 import './App.css';
 
+import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
+
+const styles = theme => ({
+  main: {
+    width: 'auto',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  }
+});
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#48cad5',
+      main: '#48cad5',
+      dark: '#3ec7d3',
+      contrastText: '#fff',
+    }
+  },
+});
+
+
 class App extends Component {
   constructor() { 
     super();
@@ -59,17 +96,27 @@ class App extends Component {
   }
 
   render() {
-    let status = <h1>{this.state.status}</h1>;
+    const { classes } = this.props;
+
+    let status = <Typography variant="body1" align="center" color="error">
+                  {this.state.status}
+                </Typography>
 
     return (
-      <div className="App">
-        {status}
-        <CurrentTime/>
-        <SetAlarm submitAlarm={this.submitAlarm} currentAlarmTime={this.state.currentAlarmTime}/>
-        <CurrentAlarms currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm}/>
-      </div>
+      <MuiThemeProvider theme={theme}>
+        <main className={classes.main}>
+          {status}
+          <Paper className={classes.paper}>
+              <CurrentTime/>
+              <SetAlarm submitAlarm={this.submitAlarm} currentAlarmTime={this.state.currentAlarmTime}/>
+              <CurrentAlarms currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm}/>
+          </Paper>
+        </main>
+      </MuiThemeProvider>
+
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
+
