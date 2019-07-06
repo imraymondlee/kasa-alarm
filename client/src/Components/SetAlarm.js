@@ -39,7 +39,7 @@ class SetAlarm extends Component {
           value={this.dateTime}
         />
         <br />
-        {this.props.currentAlarmTime != 'No alarms have been set.' ? (
+        {this.props.currentAlarmTime !== 'No alarms have been set.' ? (
           <Button type="submit" variant="contained" color="primary" fullWidth={true} disabled>
             Set Alarm
           </Button>

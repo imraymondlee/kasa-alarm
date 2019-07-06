@@ -10,7 +10,7 @@ class CurrentAlarms extends Component {
         <h1>Current Alarm</h1>
         <p> {this.props.currentAlarmTime}</p>
 
-        {this.props.currentAlarmTime != 'No alarms have been set.' &&
+        {this.props.currentAlarmTime !== 'No alarms have been set.' &&
           <Button onClick={() => this.props.deleteAlarm(this.props.currentAlarmTime)}
             variant="contained" 
             fullWidth={true} 

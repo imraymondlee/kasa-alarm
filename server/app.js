@@ -14,7 +14,7 @@ let currentBrightness;
 const brightnessIncrement = 10;
 const timeIncrement = 10;
 const startingBrightness = 0;
-const bulbIP = '192.168.1.140';
+const bulbIP = '192.168.1.139';
 
 let app = express();
 
@@ -64,6 +64,11 @@ app.post('/delete-alarm', (req, res) => {
 	endAlarmTime = 'No alarms have been set.'
 	clearTimeout(timer);
 	res.send('Alarm deleted!');
+});
+
+app.post('/bulb-on', (req, res) => {
+	bulbOn();
+	res.status(200).send('Bulb On!');
 });
 
 app.post('/bulb-off', (req, res) => {
@@ -127,6 +132,12 @@ const updateTime = () => {
 
 const bulbOff = () => {
 	bulb.lighting.setLightState({on_off: false}).then((state) => {
+		console.log(state);
+	});
+}
+
+const bulbOn = () => {
+	bulb.lighting.setLightState({on_off: true, brightness: 100}).then((state) => {
 		console.log(state);
 	});
 }
