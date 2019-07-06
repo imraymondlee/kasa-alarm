@@ -5,10 +5,12 @@ import SetAlarm from './Components/SetAlarm';
 import CurrentAlarms from './Components/CurrentAlarms';
 import './App.css';
 
-import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { withStyles, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   main: {
@@ -33,10 +35,10 @@ const styles = theme => ({
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#48cad5',
-      main: '#48cad5',
-      dark: '#3ec7d3',
-      contrastText: '#fff',
+      light: '#acf1f6',
+      main: '#43c9d5',
+      dark: '#0890a8',
+      contrastText: '#ffffff'
     }
   },
 });
@@ -46,7 +48,8 @@ class App extends Component {
   constructor() { 
     super();
     this.state = {
-      currentAlarmTime : 'No alarms have been set.'
+      currentAlarmTime : 'No alarms have been set.',
+      lightsOn: false
     };
   }
 
@@ -55,6 +58,20 @@ class App extends Component {
       .then((response) => {
         this.setState({
           currentAlarmTime: response.data
+        });
+        console.log('Response: ' + response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          status: 'Cannot connect to server.'
+        });
+      });
+
+    axios.get('/light-status')
+      .then((response) => {
+        this.setState({
+          lightsOn: response.data
         });
         console.log('Response: ' + response.data);
       })
@@ -78,7 +95,7 @@ class App extends Component {
 
     this.setState({
       currentAlarmTime: formattedDate
-    })
+    });
   }
 
   deleteAlarm = (deleteAlarmTime) => {
@@ -92,7 +109,33 @@ class App extends Component {
 
     this.setState({
       currentAlarmTime: 'No alarms have been set.'
-    })
+    });
+  }
+
+  toggleLights = () => {
+    if(this.state.lightsOn === false) {
+      axios.post('/bulb-on')
+        .then((response) => {
+          console.log(response);
+        }).catch((error) => {
+          console.log(error);
+        });
+
+      this.setState({
+        lightsOn: true
+      });
+    } else {
+      axios.post('/bulb-off')
+        .then((response) => {
+          console.log(response);
+        }).catch((error) => {
+          console.log(error);
+        });
+
+      this.setState({
+        lightsOn: false
+      });
+    }
   }
 
   render() {
@@ -103,16 +146,42 @@ class App extends Component {
                 </Typography>
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <main className={classes.main}>
           {status}
           <Paper className={classes.paper}>
+
+            <Box display="flex" justifyContent="space-between" mt={3} mb={5}>
+              <Box>
+                <Typography variant="h5" align="center" style={{color: "#0890a8"}}>
+                  <strong>Kasa Alarm</strong>
+                </Typography>
+              </Box>
+              <Box>
+                {this.state.lightsOn === true ? (
+                  <Button variant="contained" style={{backgroundColor: "#78c747", color: "#ffffff"}} onClick={this.toggleLights}>
+                    Turn lights off
+                  </Button>
+                ) : (
+                  <Button variant="outlined" style={{borderColor: "#78c747", color: "#78c747"}} onClick={this.toggleLights}>
+                    Turn lights on
+                  </Button>
+                )}
+              </Box>
+            </Box>
+
+            <Box mt={1} mb={3}>
               <CurrentTime/>
+            </Box>
+
+            <Box mt={1} mb={3}>
               <SetAlarm submitAlarm={this.submitAlarm} currentAlarmTime={this.state.currentAlarmTime}/>
-              <CurrentAlarms currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm}/>
+            </Box>
+  
+            <CurrentAlarms currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm}/>
           </Paper>
         </main>
-      </MuiThemeProvider>
+      </ThemeProvider>
 
     );
   }

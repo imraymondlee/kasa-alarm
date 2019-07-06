@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import moment from 'moment';
+
+import Typography from '@material-ui/core/Typography';
 
 class CurrentTime extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: new Date().toLocaleString()
+      date: moment().format("MMMM Do YYYY"),
+      time: moment().format("h:mm:ss A")
     };
   }
 
@@ -20,15 +24,24 @@ class CurrentTime extends Component {
   }
 
   tick() {
+    let date = moment().format("MMMM Do YYYY");
+    let time = moment().format("h:mm:ss A");
+
     this.setState({
-      time: new Date().toLocaleString()
+      date: date,
+      time: time
     });
   }
   
   render() {
     return (
       <div>
-        <h1>{this.state.time}</h1>
+        <Typography variant="body1" align="center">
+          <strong>{this.state.date}</strong>
+        </Typography>
+        <Typography variant="h3" align="center">
+          {this.state.time}
+        </Typography>
       </div>
     );
   }
