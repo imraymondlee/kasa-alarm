@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import CurrentTime from './Components/CurrentTime';
-import SetAlarm from './Components/SetAlarm';
-import CurrentAlarms from './Components/CurrentAlarms';
+import NewAlarmScreen from './Components/NewAlarmScreen';
+import MainScreen from './Components/MainScreen';
+
+
+
 import './App.css';
 
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
@@ -13,6 +15,7 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { sizing } from '@material-ui/system';
 
 
 const styles = theme => ({
@@ -28,10 +31,12 @@ const styles = theme => ({
     },
   },
   paper: {
+    position: 'relative',
     marginTop: theme.spacing.unit * 8,
     display: 'flex',
     flexDirection: 'column',
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+    minHeight: 500
   }
 });
 
@@ -149,44 +154,40 @@ class App extends Component {
                 </Typography>
 
     return (
-      <ThemeProvider theme={theme}>
-        <main className={classes.main}>
-          {status}
-          <Paper className={classes.paper}>
 
-            <Box display="flex" justifyContent="space-between" mt={3} mb={5}>
-              <Box>
-                <Typography variant="h5" align="center" style={{color: "#0890a8"}}>
-                  <strong>Kasa Alarm</strong>
-                </Typography>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <main className={classes.main}>
+            {status}
+            <Paper className={classes.paper}>
+
+              <Box display="flex" justifyContent="space-between" mt={3} mb={5}>
+                <Box>
+                  <Typography variant="h5" align="center" style={{color: "#0890a8"}}>
+                    <strong>Kasa Alarm</strong>
+                  </Typography>
+                </Box>
+                <Box>
+                  {this.state.lightsOn === true ? (
+                    <Button variant="contained" size="small" style={{backgroundColor: "#78c747", color: "#ffffff"}} onClick={this.toggleLights}>
+                      Turn lights off
+                    </Button>
+                  ) : (
+                    <Button variant="outlined" size="small" style={{borderColor: "#78c747", color: "#78c747"}} onClick={this.toggleLights}>
+                      Turn lights on
+                    </Button>
+                  )}
+                </Box>
               </Box>
-              <Box>
-                {this.state.lightsOn === true ? (
-                  <Button variant="contained" style={{backgroundColor: "#78c747", color: "#ffffff"}} onClick={this.toggleLights}>
-                    Turn lights off
-                  </Button>
-                ) : (
-                  <Button variant="outlined" style={{borderColor: "#78c747", color: "#78c747"}} onClick={this.toggleLights}>
-                    Turn lights on
-                  </Button>
-                )}
-              </Box>
-            </Box>
 
-            <Box mt={1} mb={3}>
-              <CurrentTime/>
-            </Box>
+              <Route path="/" exact render={(props)=>(<MainScreen currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm} />)} />
+              <Route path="/new-alarm-screen" render={(props)=>(<NewAlarmScreen submitAlarm={this.submitAlarm} currentAlarmTime={this.state.currentAlarmTime} />)} />
 
-            <Box mt={1} mb={3}>
-              <SetAlarm submitAlarm={this.submitAlarm} currentAlarmTime={this.state.currentAlarmTime}/>
-            </Box>
+            </Paper>
+          </main>
+        </ThemeProvider>
+      </Router>
 
-
-  
-            <CurrentAlarms currentAlarmTime={this.state.currentAlarmTime} deleteAlarm={this.deleteAlarm}/>
-          </Paper>
-        </main>
-      </ThemeProvider>
 
     );
   }

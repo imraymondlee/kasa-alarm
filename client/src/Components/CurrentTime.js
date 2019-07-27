@@ -8,7 +8,7 @@ class CurrentTime extends Component {
     super(props);
     this.state = {
       date: moment().format("MMMM Do YYYY"),
-      time: moment().format("h:mm:ss A")
+      time: moment().format("h:mm A")
     };
   }
 
@@ -25,7 +25,7 @@ class CurrentTime extends Component {
 
   tick() {
     let date = moment().format("MMMM Do YYYY");
-    let time = moment().format("h:mm:ss A");
+    let time = moment().format("h:mm A");
 
     this.setState({
       date: date,

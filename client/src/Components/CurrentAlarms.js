@@ -3,11 +3,9 @@ import Button from '@material-ui/core/Button';
 
 class CurrentAlarms extends Component {
 
-
   render() {
     return (
       <div>
-        <h1>Current Alarm</h1>
         <p> {this.props.currentAlarmTime}</p>
 
         {this.props.currentAlarmTime !== 'No alarms have been set.' &&
