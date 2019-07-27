@@ -27,6 +27,9 @@ app.use(function(req, res, next) {
     next();
 });
 
+const client = new Client();
+bulb = client.getBulb({host: bulbIP});
+
 app.get('/', (req, res) => {
 	res.send('Hello World!');
 });
@@ -40,6 +43,14 @@ app.get('/show-alarms', (req, res) => {
 	}
 });
 
+
+app.get('/light-status', (req, res) => {
+	if(bulb.lighting.lightState.on_off === 1){
+		res.send(true);
+	}else{
+		res.send(false);
+	}
+});
 
 // Input wake up time. 
 // Start time will start 30 minutes prior to wake up time.
@@ -76,9 +87,7 @@ app.post('/bulb-off', (req, res) => {
 	res.status(200).send('Bulb Off!');
 });
 
-const client = new Client();
 
-bulb = client.getBulb({host: bulbIP});
 
 const updateTime = () => {
 	let date = new Date();
@@ -132,13 +141,13 @@ const updateTime = () => {
 
 const bulbOff = () => {
 	bulb.lighting.setLightState({on_off: false}).then((state) => {
-		console.log(state);
+		console.log('Bulb off: ', state);
 	});
 }
 
 const bulbOn = () => {
 	bulb.lighting.setLightState({on_off: true, brightness: 100}).then((state) => {
-		console.log(state);
+		console.log('Bulb off: ', state);
 	});
 }
 
