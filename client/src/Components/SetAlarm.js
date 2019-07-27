@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
+import Box from '@material-ui/core/Box';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 class SetAlarm extends Component {
 
@@ -44,9 +46,11 @@ class SetAlarm extends Component {
             Set Alarm
           </Button>
         ) : (
-          <Button type="submit" variant="contained" fullWidth={true} color="primary">
-            Set Alarm
-          </Button>
+          <Box mt={2} mb={3} textAlign="center">
+            <Fab type="submit" color="primary" aria-label="Add" size="small">
+              <AddIcon />
+            </Fab>
+          </Box>
         )}
 
       </form>
