@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-
 import { Redirect } from 'react-router-dom'
-
 import moment from 'moment';
+
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 
 class SetAlarm extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -35,6 +31,7 @@ class SetAlarm extends Component {
       redirect: true
     })
   }
+
   renderRedirect = () => {
     if (this.state.redirect) {
       return <Redirect to='/' />
@@ -48,7 +45,6 @@ class SetAlarm extends Component {
           <strong>New Alarm</strong>
         </Typography>
 
-
         <form onSubmit={this.onSubmit}>
           <TextField
             id="date-time"
@@ -59,22 +55,20 @@ class SetAlarm extends Component {
             value={this.dateTime}
           />
           <br />
-          {this.props.currentAlarmTime !== 'No alarms have been set.' ? (
-            <Button type="submit" variant="contained" color="primary" fullWidth={true} disabled>
+          {this.props.currentAlarmTime === 'No alarms have been set.' || this.props.currentAlarmTime === 'Invalid date' ? (
+            <Button type="submit" variant="contained" color="primary" fullWidth={true}>
               Set Alarm
             </Button>
           ) : (
-            <Button type="submit" variant="contained" color="primary" fullWidth={true}>
+            <Button type="submit" variant="contained" color="primary" fullWidth={true} disabled>
               Set Alarm
             </Button>
           )}
          {this.renderRedirect()}
         </form>
-
       </Box>
     );
   }
 }
 
 export default SetAlarm;
-

@@ -2,21 +2,16 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import NewAlarmScreen from './Components/NewAlarmScreen';
-import MainScreen from './Components/MainScreen';
-
-
-
 import './App.css';
-
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { sizing } from '@material-ui/system';
 
+import NewAlarmScreen from './Components/NewAlarmScreen';
+import MainScreen from './Components/MainScreen';
 
 const styles = theme => ({
   main: {
@@ -37,6 +32,10 @@ const styles = theme => ({
     flexDirection: 'column',
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
     minHeight: 500
+  },
+  header: {
+    borderBottom: '1px solid #e2e2e2',
+    paddingBottom: '0.75rem'
   }
 });
 
@@ -161,7 +160,7 @@ class App extends Component {
             {status}
             <Paper className={classes.paper}>
 
-              <Box display="flex" justifyContent="space-between" mt={3} mb={5}>
+              <Box display="flex" justifyContent="space-between" mt={3} mb={5} className={classes.header}>
                 <Box>
                   <Typography variant="h5" align="center" style={{color: "#0890a8"}}>
                     <strong>Kasa Alarm</strong>
@@ -187,8 +186,6 @@ class App extends Component {
           </main>
         </ThemeProvider>
       </Router>
-
-
     );
   }
 }

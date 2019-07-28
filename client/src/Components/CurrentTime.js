@@ -48,5 +48,3 @@ class CurrentTime extends Component {
 }
 
 export default CurrentTime;
-
-
