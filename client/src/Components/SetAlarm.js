@@ -11,21 +11,28 @@ class SetAlarm extends Component {
   constructor() {
     super();
     this.state = {
-      dateTime : '',
+      date : '',
+      time: '',
       redirect: false
     };
   }
   
-  onChange = (e) => {
+  onChangeDate = (e) => {
     this.setState({
-      dateTime: e.target.value
+      date: e.target.value
+    });
+  }
+
+  onChangeTime = (e) => {
+    this.setState({
+      time: e.target.value
     });
   }
 
   onSubmit = (e) => {
     e.preventDefault();
-    let date = this.state.dateTime
-    let formattedDate = moment(date, moment.HTML5_FMT.DATETIME_LOCAL).format("M/D/YYYY, h:mm:ss A");
+    let dateTime = this.state.date + ' ' + this.state.time;
+    let formattedDate = moment(dateTime, 'YYYY-MM-DD HH:mm').format("M/D/YYYY, h:mm:ss A");
     this.props.submitAlarm(formattedDate);
     this.setState({
       redirect: true
@@ -46,15 +53,26 @@ class SetAlarm extends Component {
         </Typography>
 
         <form onSubmit={this.onSubmit}>
+          <label htmlFor="date" style={{display: 'block', fontWeight: '600', color: '#0890a8', marginTop: '2rem'}}>Date</label>
           <TextField
-            id="date-time"
-            type="datetime-local"
+            id="date"
+            type="date"
             fullWidth={true}
             margin="normal"
-            onChange={this.onChange} 
-            value={this.dateTime}
+            onChange={this.onChangeDate} 
+            value={this.state.date}
           />
-          <br />
+          <label htmlFor="time"  style={{display: 'block', fontWeight: '600', color: '#0890a8', marginTop: '2rem'}}>Time</label>
+          <TextField
+            id="time"
+            type="time"
+            fullWidth={true}
+            margin="normal"
+            onChange={this.onChangeTime} 
+            value={this.state.time}
+            style={{marginBottom: '2rem'}}
+          />
+
           {this.props.currentAlarmTime === 'No alarms have been set.' || this.props.currentAlarmTime === 'Invalid date' ? (
             <Button type="submit" variant="contained" color="primary" fullWidth={true}>
               Set Alarm

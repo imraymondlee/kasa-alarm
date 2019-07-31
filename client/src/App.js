@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import './App.css';
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
@@ -31,7 +31,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-    minHeight: 500
+    minHeight: 600
   },
   header: {
     borderBottom: '1px solid #e2e2e2',
